@@ -19,5 +19,6 @@ Python 3.6.5, Django 2.0.5, Django Rest Framework 3.8.2
 * media.serializers for uploading images/files 
 * use Django template engine to render posts
 * page, search, i18n, vote apps
+    * page: a page consists of (component, queryset) pairs. Allows user to set use_hyperlinked_serializer.
 * demo website and admin frontend
 * use Django sites framework

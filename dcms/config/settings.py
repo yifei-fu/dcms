@@ -130,3 +130,8 @@ SHORT_NAME_CHAR_MAX_LEN = 100
 # media
 IMAGE_UPLOAD_PATH = 'img/'
 FILE_UPLOAD_PATH = 'file/'
+
+# content
+
+# count tags/categories in the following app.model
+TAG_COUNT_MODELS = CATEGORY_COUNT_MODELS = (('post', 'Post'), ('media', 'Image'), ('media', 'File'))
