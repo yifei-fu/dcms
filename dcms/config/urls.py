@@ -19,6 +19,7 @@ from django.urls import path, include
 api_urls = [
     path('post/', include('post.urls'), name='post_api'),
     path('user/', include('user.urls'), name='user_api'),
+    path('media/', include('media.urls'), name='media_api'),
 ]
 urlpatterns = [
     path('api/v1/', include(api_urls)),

@@ -47,3 +47,19 @@ class TagSerializer(serializers.ModelSerializer):
         for app_label, model_name in CATEGORY_COUNT_MODELS:
             count += obj.get_count(apps.get_model(app_label, model_name).objects.all())
         return count
+
+
+class ContentBaseSerializer(serializers.ModelSerializer):
+    '''
+    A base serializer class for subclasses of ContentMetadata. For example:
+
+    class PostSerializer(ContentBaseSerializer):
+        class Meta(ContentBaseSerializer.Meta):
+            model = Post
+    '''
+    tags = TagsField()
+    category = serializers.SlugRelatedField(slug_field='name', allow_null=True, queryset=Category.objects.all())
+
+    class Meta:
+        fields = '__all__'
+        read_only_fields = ('id', 'creation_time', 'modification_time', 'author', 'archived')

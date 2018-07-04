@@ -5,9 +5,17 @@ from config.settings import IMAGE_UPLOAD_PATH, FILE_UPLOAD_PATH
 from content.models import ContentMetadata
 
 
-class Image(ContentMetadata):
-    image = models.ImageField(upload_to=IMAGE_UPLOAD_PATH)
+def get_image_upload_path(instance, filename):
+    return IMAGE_UPLOAD_PATH + '{}/{}'.format(
+        instance.author.username if instance.author else 'guest', filename)
 
+
+def get_file_upload_path(instance, filename):
+    return FILE_UPLOAD_PATH + '{}/{}'.format(
+        instance.author.username if instance.author else 'guest', filename)
+
+class Image(ContentMetadata):
+    path = models.ImageField(upload_to=get_image_upload_path)
 
 class File(ContentMetadata):
-    file = models.FileField(upload_to=FILE_UPLOAD_PATH)
+    path = models.FileField(upload_to=get_file_upload_path)

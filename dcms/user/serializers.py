@@ -33,6 +33,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class BasicUserSerializer(serializers.ModelSerializer):
+    '''
+    User information serializer for public access. Read-only.
+    '''
     class Meta:
         model = User
         fields = ('id', 'username', 'date_joined', 'last_login')
@@ -40,6 +43,9 @@ class BasicUserSerializer(serializers.ModelSerializer):
 
 
 class FullUserSerializer(serializers.ModelSerializer):
+    '''
+    User full information serializer for self and admins.
+    '''
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'date_joined', 'last_login')
