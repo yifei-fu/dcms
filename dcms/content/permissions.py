@@ -8,4 +8,6 @@ class IsAuthorOrAdminOtherwiseReadOnly(BasePermission):
         if request.method in permissions.SAFE_METHODS:  # read-only methods
             return True
         else:
+            if not request.user:
+                return False
             return request.user.is_staff or (request.user and instance.author.id == request.user.id)

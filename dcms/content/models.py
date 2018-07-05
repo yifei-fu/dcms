@@ -55,7 +55,7 @@ class ContentMetadata(models.Model):
     modification_time = models.DateTimeField(_('modification date'), blank=True, null=True, auto_now=True)
     author = models.ForeignKey(User, blank=False, null=True, on_delete=models.SET_NULL)
 
-    archived = models.BooleanField(default=True)
+    archived = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Content Object {self.slug}"
