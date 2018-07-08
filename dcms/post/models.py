@@ -1,10 +1,9 @@
 from django.contrib.contenttypes.fields import GenericRelation
-from django.db import models
-# Create your models here.
 from django.utils import timezone
 
 from comment.models import Comment
 from content.models import ContentMetadata, Category
+from vote.models import *
 
 
 class Post(ContentMetadata):
@@ -21,7 +20,9 @@ class Post(ContentMetadata):
     view_count = models.IntegerField(default=0, editable=False)
 
     comment_enabled = models.BooleanField(default=True)
-    comment = GenericRelation(Comment)
+    comments = GenericRelation(Comment)
+
+    votes = GenericRelation(Vote)
 
     def __str__(self):
         return self.title
@@ -36,3 +37,7 @@ class Post(ContentMetadata):
         if self.published and not self.publish_time:
             self.publish_time = timezone.now()
         super().save(*args, **kwargs)
+
+
+Vote.add_score_options(
+    ContentType.objects.get_for_model(Post), TEN_SCORE_OPTIONS)

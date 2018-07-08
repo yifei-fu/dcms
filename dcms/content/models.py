@@ -57,9 +57,6 @@ class ContentMetadata(models.Model):
 
     archived = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f"Content Object {self.slug}"
-
     @classmethod
     def active_objects(cls):
         return cls.objects.filter(archived=False)

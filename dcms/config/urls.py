@@ -21,6 +21,7 @@ api_urls = [
     path('post/', include('post.urls'), name='post_api'),
     path('media/', include('media.urls'), name='media_api'),
     path('comment/', include('comment.urls'), name='comment_api'),
+    path('vote/', include('vote.urls'), name='vote_api'),
 ]
 urlpatterns = [
     path('api/v1/', include(api_urls)),

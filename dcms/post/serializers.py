@@ -1,13 +1,11 @@
-from rest_framework import serializers
-from comment.serializers import AddGetComment
-from content.models import Tag, Category
-from content.serializers import ContentBaseSerializer
-from .models import *
 from comment.views import *
+from vote.serializers import SerializerVotesFieldMixin
+from .models import *
 
 
-class PostSerializer(ContentBaseSerializer, AddGetComment):
-    comment = serializers.SerializerMethodField()
+class PostSerializer(ContentBaseSerializer,
+                     SerializerCommentsFieldMixin,
+                     SerializerVotesFieldMixin):
 
     class Meta(ContentBaseSerializer.Meta):
         model = Post

@@ -1,24 +1,20 @@
 from rest_framework import serializers
-from rest_framework.reverse import reverse
 
 from content.serializers import ContentBaseSerializer
+from generic.contenttypes_utils import reverse_contenttypes_url, add_contenttypes_info_from_context
 from .models import *
 
 
-class AddGetComment():
+class SerializerCommentsFieldMixin(serializers.Serializer):
     '''
-    defines get_comment method for using 'comment = serializers.SerializerMethodField()' for hyperlinked serialization of comments
+    Adds fields 'comments' for hyperlinked API of comments to a given object
     '''
+    comments = serializers.SerializerMethodField()
 
-    def get_comment(self, obj):
-        url_kwargs = {
-            'content_type': ContentType.objects.get_for_model(obj).id,
-            'object_id': obj.id
-        }
-        # self must be a subclass of Serializer
+    def get_comments(self, obj):
         context = getattr(self, 'context')
         request = context.get('request') if context else None
-        return reverse('comment-list', kwargs=url_kwargs, request=request)
+        return reverse_contenttypes_url('comment-list', obj, request)
 
 
 class CommentSerializer(ContentBaseSerializer):
@@ -28,17 +24,10 @@ class CommentSerializer(ContentBaseSerializer):
                   'content', 'author', 'replied_to')
 
     def validate(self, attrs):
-        # add fields in context for serialization
-        attrs['content_type'] = self.context['content_type']
-        obj = self.context.get('obj')
-        object_id = obj.id if obj else self.context['object_id']
-        attrs['object_id'] = object_id
+        add_contenttypes_info_from_context(attrs, self.context)
 
         # check replied_to
-        replied_to = attrs.get('replied_to')
-        if replied_to:
-            if attrs.get('content_type') != replied_to.content_type or attrs.get('object_id') != replied_to.object_id:
-                raise ValidationError("replied_to is either null or a comment to the same object")
+        self.Meta.model.validate_replied_to(attrs)
 
         # check if object being commented has attr comment_enabled and is True
         comment_enabled = getattr(attrs.get('content_type'), 'comment_enabled', True)
