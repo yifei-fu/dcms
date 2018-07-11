@@ -17,8 +17,12 @@ class Comment(ContentMetadata):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id', )
 
+    @property
+    def content_preview(self):
+        return self.content[:TEXT_PREVIEW_LEN]
+
     def __str__(self):
-        return 'Comment "' + self.content[:TEXT_PREVIEW_LEN] + "'"
+        return 'Comment "{}" by {}'.format(self.content_preview, self.author)
 
     # Validates that replied_to is either None or a comment to the same object.
     # attrs is either a Comment instance or data in CommentSerializer

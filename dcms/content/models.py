@@ -57,6 +57,10 @@ class ContentMetadata(models.Model):
 
     archived = models.BooleanField(default=False)
 
+    @property
+    def tags_list(self):
+        return ", ".join([tag for (tag,) in self.tags.values_list('name')])
+
     @classmethod
     def active_objects(cls):
         return cls.objects.filter(archived=False)
