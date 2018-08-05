@@ -16,6 +16,7 @@ def get_file_upload_path(instance, filename):
 
 class Image(ContentMetadata):
     path = models.ImageField(upload_to=get_image_upload_path)
+    caption = models.TextField(blank=True)
 
 class File(ContentMetadata):
     path = models.FileField(upload_to=get_file_upload_path)

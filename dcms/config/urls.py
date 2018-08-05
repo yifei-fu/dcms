@@ -18,6 +18,7 @@ from django.urls import path, include
 
 api_urls = [
     path('user/', include('user.urls'), name='user_api'),
+    path('page/', include('page.urls'), name='page_api'),
     path('post/', include('post.urls'), name='post_api'),
     path('media/', include('media.urls'), name='media_api'),
     path('comment/', include('comment.urls'), name='comment_api'),
