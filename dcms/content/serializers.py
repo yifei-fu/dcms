@@ -57,8 +57,9 @@ class ContentBaseSerializer(serializers.ModelSerializer):
         class Meta(ContentBaseSerializer.Meta):
             model = Post
     '''
-    tags = TagsField()
-    category = serializers.SlugRelatedField(slug_field='name', allow_null=True, queryset=Category.objects.all())
+    tags = TagsField(required=False)
+    category = serializers.SlugRelatedField(slug_field='name', allow_null=True,
+                                            queryset=Category.objects.all(), required=False)
 
     class Meta:
         fields = '__all__'

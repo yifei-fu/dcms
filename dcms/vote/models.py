@@ -55,4 +55,4 @@ class Vote(models.Model):
 
     @classmethod
     def score_distribution(cls, queryset):
-        return queryset.values('score').annotate(models.Count('score'))
+        return queryset.values('score').annotate(count=models.Count('score'))

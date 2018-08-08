@@ -9,13 +9,11 @@ from vote.models import *
 class Post(ContentMetadata):
     gen_slug_from_field = 'title'
 
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
-
     title = models.TextField()
     content = models.TextField()
 
     published = models.BooleanField(default=False)
-    publish_time = models.DateTimeField(null=True)
+    publish_time = models.DateTimeField(blank=True, null=True)
 
     view_count = models.IntegerField(default=0, editable=False)
 
@@ -27,11 +25,19 @@ class Post(ContentMetadata):
     def __str__(self):
         return self.title
 
-    published_query = models.Q(published=True, publish_time__lte=timezone.now())
+    @classmethod
+    def get_published(cls, queryset=None):
+        if not queryset:
+            queryset = cls.objects
+        return queryset.filter(published=True, publish_time__lte=timezone.now())
 
     @classmethod
-    def get_published(cls):
-        return cls.objects.filter(Post.published_query)
+    def get_recent(cls, queryset=None):
+        return cls.get_published(queryset).order_by('-publish_time')
+
+    @classmethod
+    def get_most_viewed(cls, queryset=None):
+        return cls.get_published(queryset).order_by('-view_count')
 
     def save(self, *args, **kwargs):
         if self.published and not self.publish_time:

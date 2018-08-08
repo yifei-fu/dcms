@@ -21,5 +21,11 @@ class PostAdmin(admin.ModelAdmin):
 
     filter_horizontal = ('tags',)
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if not request.user.is_superuser:
+            qs.filter(author=request.user)
+        return qs
+
 
 admin.site.register(Post, PostAdmin)
