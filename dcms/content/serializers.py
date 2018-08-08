@@ -2,6 +2,7 @@ from django.apps import apps
 from rest_framework import serializers
 
 from config.settings import TAG_COUNT_MODELS, CATEGORY_COUNT_MODELS
+from user.serializers import BasicUserSerializer
 from .models import *
 
 
@@ -60,6 +61,7 @@ class ContentBaseSerializer(serializers.ModelSerializer):
     tags = TagsField(required=False)
     category = serializers.SlugRelatedField(slug_field='name', allow_null=True,
                                             queryset=Category.objects.all(), required=False)
+    author = BasicUserSerializer(required=False, read_only=True)
 
     class Meta:
         fields = '__all__'

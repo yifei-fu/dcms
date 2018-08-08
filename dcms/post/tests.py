@@ -12,8 +12,7 @@ class PostTestCase(TestCase):
         self.factory = RequestFactory()
         self.user1 = User.objects.create_user(username='user1', password='password',
                                               is_staff=True, is_superuser=True)
-        self.user2 = User.objects.create_user(username='user2', password='password',
-                                              is_staff=True, is_superuser=False)
+        self.user2 = User.objects.create_user(username='user2', password='password')
         self.time_now = timezone.now()
         self.posts = [Post.objects.create(title="Post #1", content="Post #1 content",
                                           author=self.user1, published=True,
@@ -65,6 +64,7 @@ class PostTestCase(TestCase):
         self.assertEqual(len(data), 4)
         self.assertEqual(data[3]['id'], 4)
         self.assertEqual(data[3]['published'], False)
+        self.assertEqual(data[3]['author']['id'], 2)
 
     def test_post_create(self):
         client = APIClient()
@@ -81,3 +81,30 @@ class PostTestCase(TestCase):
         self.assertEqual(Post.objects.last().id, 5)
         self.assertEqual(Post.objects.last().title, "New Post through API")
         self.assertEqual(Post.objects.last().content, "New post content")
+        self.assertEqual(Post.objects.last().author, self.user1)
+
+    def test_post_put_update(self):
+        client = APIClient()
+        post_1_url = self.list_url + '1/'
+        # must be the author (for non-staff) to update a new post
+        response = client.post(self.list_url, data={'title': "Post #1 updated", 'content': "Post #1 updated"})
+        self.assertEqual(response.status_code, 403)
+
+        client.login(username='user2', password='password')
+        response = client.put(post_1_url, data={'title': "Post #1 updated", 'content': "Post #1 updated"})
+        self.assertEqual(response.status_code, 403)
+
+        client.login(username='user1', password='password')
+        response = client.put(post_1_url, data={'title': "Post #1 updated", 'content': "Post #1 updated"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Post.objects.first().title, "Post #1 updated")
+        self.assertEqual(Post.objects.first().content, "Post #1 updated")
+
+        # a superuser can update other users' post
+        client.logout()
+        client.login(username='user2', password='password')
+        post_4_url = self.list_url + '4/'
+        response = client.put(post_4_url, data={'title': "Post #4 updated", 'content': "Post #4 updated"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Post.objects.get(id=4).author, self.user2)  # author is unchanged
+        self.assertEqual(Post.objects.get(id=4).title, "Post #4 updated")

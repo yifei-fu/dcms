@@ -12,5 +12,6 @@ class PostSerializer(ContentBaseSerializer,
         read_only_fields = ContentBaseSerializer.Meta.read_only_fields + ('comment', 'author')
 
     def create(self, validated_data):
-        validated_data['author'] = self.context['request'].user
+        if not validated_data.get('author'):
+            validated_data['author'] = self.context['request'].user
         return super(PostSerializer, self).create(validated_data)
