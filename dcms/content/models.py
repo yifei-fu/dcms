@@ -15,7 +15,7 @@ class Category(models.Model):
         return self.name
 
     def get_count(self, queryset):
-        return queryset.filter(category_pk=self.pk).count()
+        return queryset.filter(category=self.id).count()
 
 
 class Tag(models.Model):

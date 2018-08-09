@@ -10,7 +10,7 @@ class Post(ContentMetadata):
     gen_slug_from_field = 'title'
 
     title = models.TextField()
-    content = models.TextField()
+    content = models.TextField(blank=True)
 
     published = models.BooleanField(default=False)
     publish_time = models.DateTimeField(blank=True, null=True)

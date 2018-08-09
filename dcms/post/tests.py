@@ -70,11 +70,13 @@ class PostTestCase(TestCase):
         client = APIClient()
 
         # must be authenticated to create a new post
-        response = client.post(self.list_url, data={'title': "New Post through API", 'content': "New post content"})
+        response = client.post(self.list_url, format='json',
+                               data={'title': "New Post through API", 'content': "New post content"})
         self.assertEqual(response.status_code, 403)
 
         client.login(username='user1', password='password')
-        response = client.post(self.list_url, data={'title': "New Post through API", 'content': "New post content",
+        response = client.post(self.list_url, format='json',
+                               data={'title': "New Post through API", 'content': "New post content",
                                                     'tags': []})
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Post.objects.count(), 5)
@@ -87,15 +89,18 @@ class PostTestCase(TestCase):
         client = APIClient()
         post_1_url = self.list_url + '1/'
         # must be the author (for non-staff) to update a new post
-        response = client.post(self.list_url, data={'title': "Post #1 updated", 'content': "Post #1 updated"})
+        response = client.post(self.list_url, format='json',
+                               data={'title': "Post #1 updated", 'content': "Post #1 updated"})
         self.assertEqual(response.status_code, 403)
 
         client.login(username='user2', password='password')
-        response = client.put(post_1_url, data={'title': "Post #1 updated", 'content': "Post #1 updated"})
+        response = client.put(post_1_url, format='json',
+                              data={'title': "Post #1 updated", 'content': "Post #1 updated"})
         self.assertEqual(response.status_code, 403)
 
         client.login(username='user1', password='password')
-        response = client.put(post_1_url, data={'title': "Post #1 updated", 'content': "Post #1 updated"})
+        response = client.put(post_1_url, format='json',
+                              data={'title': "Post #1 updated", 'content': "Post #1 updated"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Post.objects.first().title, "Post #1 updated")
         self.assertEqual(Post.objects.first().content, "Post #1 updated")
@@ -104,7 +109,8 @@ class PostTestCase(TestCase):
         client.logout()
         client.login(username='user2', password='password')
         post_4_url = self.list_url + '4/'
-        response = client.put(post_4_url, data={'title': "Post #4 updated", 'content': "Post #4 updated"})
+        response = client.put(post_4_url, format='json',
+                              data={'title': "Post #4 updated", 'content': "Post #4 updated"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Post.objects.get(id=4).author, self.user2)  # author is unchanged
         self.assertEqual(Post.objects.get(id=4).title, "Post #4 updated")

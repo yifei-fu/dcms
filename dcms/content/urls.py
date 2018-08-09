@@ -1,12 +1,11 @@
 from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
 
-from post import apiviews
+from . import views
 
 router = DefaultRouter()
-router.register(r'article', apiviews.ArticleViewSet)
-router.register(r'tag', apiviews.TagViewSet)
-router.register(r'category', apiviews.CategoryViewSet)
+router.register(r'tag', views.TagViewSet)
+router.register(r'category', views.CategoryViewSet)
 urlpatterns = [
     url(r'', include(router.urls)),
 ]

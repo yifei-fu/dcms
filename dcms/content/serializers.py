@@ -25,7 +25,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('name', 'parent', 'count')
+        fields = '__all__'
         read_only_fields = ('count',)
 
     def get_count(self, obj):

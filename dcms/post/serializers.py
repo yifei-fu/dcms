@@ -14,4 +14,4 @@ class PostSerializer(ContentBaseSerializer,
     def create(self, validated_data):
         if not validated_data.get('author'):
             validated_data['author'] = self.context['request'].user
-        return super(PostSerializer, self).create(validated_data)
+        return super().create(validated_data)
