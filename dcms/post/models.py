@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils import timezone
+from django.db.utils import OperationalError
 
 from comment.models import Comment
 from content.models import ContentMetadata, Category
@@ -45,5 +46,8 @@ class Post(ContentMetadata):
         super().save(*args, **kwargs)
 
 
-Vote.add_score_options(
-    ContentType.objects.get_for_model(Post), TEN_SCORE_OPTIONS)
+try:
+    Vote.add_score_options(
+        ContentType.objects.get_for_model(Post), TEN_SCORE_OPTIONS)
+except OperationalError:
+    pass
