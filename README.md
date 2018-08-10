@@ -1,4 +1,5 @@
 # dcms
+[![Build Status](https://travis-ci.org/yifei-fu/dcms.svg?branch=master)](https://travis-ci.org/yifei-fu/dcms)
 
 A work-in-progress Django content management system for building pages, blogs, and forums.
 
