@@ -7,6 +7,7 @@ from .models import *
 from post.models import *
 from post.views import *
 
+from utils import get_results
 
 class ContentMetadataTestCase(TestCase):
     '''
@@ -45,7 +46,7 @@ class ContentMetadataTestCase(TestCase):
         client = APIClient()
         response = client.get(reverse('tag-list'))
         self.assertEqual(response.status_code, 200)
-        data = response.data
+        data = get_results(response.data)
         self.assertEqual(len(data), 3)
         self.assertEqual(data[0], {'id': 1, 'name': 'tag1', 'count': 1})
         self.assertEqual(data[1], {'id': 2, 'name': 'tag2', 'count': 1})
@@ -55,7 +56,7 @@ class ContentMetadataTestCase(TestCase):
         client = APIClient()
         response = client.get(reverse('category-list'))
         self.assertEqual(response.status_code, 200)
-        data = response.data
+        data = get_results(response.data)
         self.assertEqual(len(data), 5)
         self.assertEqual(data[0], {'id': 1, 'name': 'root1', 'count': 0, 'parent': None})
         self.assertEqual(data[1], {'id': 2, 'name': 'root2', 'count': 0, 'parent': None})
@@ -71,7 +72,7 @@ class ContentMetadataTestCase(TestCase):
                                data={'title': 'New Post', 'content': 'To test adding tags and categories for contents.',
                                      'tags': ['tag2', 'new_tag'], 'category': 'root1-node2-node1'})
         self.assertEqual(response.status_code, 201)
-        data = response.data
+        data = get_results(response.data)
 
         self.assertTrue(Tag.objects.filter(name='new_tag').exists())
 

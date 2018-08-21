@@ -2,9 +2,12 @@ from django.test import TestCase, RequestFactory
 from django.utils import timezone
 from rest_framework.test import APIClient
 from rest_framework.reverse import reverse
+
 from post.admin import PostAdmin
 from .models import *
 from .views import *
+
+from utils import get_results
 
 
 class PostTestCase(TestCase):
@@ -44,7 +47,7 @@ class PostTestCase(TestCase):
         client = APIClient()
         response = client.get(self.list_url)
         self.assertIs(response.status_code, 200)
-        data = response.data
+        data = get_results(response.data)
         self.assertEqual(len(data), 2)
         self.assertEqual(data[0]['id'], 1)
         self.assertEqual(data[1]['id'], 2)
@@ -60,7 +63,7 @@ class PostTestCase(TestCase):
         client.login(username='user2', password='password')
         response = client.get(self.list_url)
         self.assertEqual(response.status_code, 200)
-        data = response.data
+        data = get_results(response.data)
         self.assertEqual(len(data), 4)
         self.assertEqual(data[3]['id'], 4)
         self.assertEqual(data[3]['published'], False)
