@@ -17,3 +17,8 @@ class PostViewSet(viewsets.ModelViewSet):
         if not self.request.user.is_anonymous:
             qs = qs | Post.objects.filter(author=self.request.user.id)  # include unpublished posts from the user
         return qs
+
+    def list(self, request, *args, **kwargs):
+        self.get_serializer_context = lambda: {'hide_content': True}
+        data = super().list(request, *args, **kwargs)
+        return data

@@ -15,3 +15,9 @@ class PostSerializer(ContentBaseSerializer,
         if not validated_data.get('author'):
             validated_data['author'] = self.context['request'].user
         return super().create(validated_data)
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if self.context.get('hide_content'):
+            data.pop('content')
+        return data

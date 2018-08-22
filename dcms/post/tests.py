@@ -53,7 +53,8 @@ class PostTestCase(TestCase):
         self.assertEqual(data[1]['id'], 2)
 
         self.assertEqual(data[0]['title'], "Post #1")
-        self.assertEqual(data[0]['content'], "Post #1 content")
+        # now post-list does not return content
+        # self.assertEqual(data[0]['content'], "Post #1 content")
         self.assertEqual(data[0]['published'], True)
         self.assertIsNotNone(data[1]['publish_time'])
 
