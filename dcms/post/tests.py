@@ -70,6 +70,39 @@ class PostTestCase(TestCase):
         self.assertEqual(data[3]['published'], False)
         self.assertEqual(data[3]['author']['id'], 2)
 
+    def test_post_filter(self):
+        client = APIClient()
+        response = client.get(self.list_url + '?title=Post%20#1')
+        self.assertEqual(response.status_code, 200)
+        data = get_results(response.data)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0].get('id'), 1)
+
+        response = client.get(self.list_url + '?content_contains=#2')
+        self.assertEqual(response.status_code, 200)
+        data = get_results(response.data)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0].get('id'), 2)
+
+        response = client.get(self.list_url + '?author=user1')
+        self.assertEqual(response.status_code, 200)
+        data = get_results(response.data)
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data[0].get('id'), 1)
+        self.assertEqual(data[1].get('id'), 2)
+
+        response = client.get(self.list_url + f'?publish_time_gte={self.time_now.date().isoformat()}')
+        self.assertEqual(response.status_code, 200)
+        data = get_results(response.data)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0].get('id'), 2)
+
+        response = client.get(self.list_url + '?view_count_lte=5')
+        self.assertEqual(response.status_code, 200)
+        data = get_results(response.data)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0].get('id'), 1)
+
     def test_post_create(self):
         client = APIClient()
 
