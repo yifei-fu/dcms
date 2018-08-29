@@ -41,7 +41,8 @@ class PostViewSet(viewsets.ModelViewSet):
         filter_kwargs = {}
         for field, value in query_params.items():
             if not field in self.ALLOWED_FILTER_PARAMS:
-                raise ParseError(code=400, detail="Invalid filter argument")
+                continue
+                # raise ParseError(code=400, detail="Invalid filter argument")
             filter_kwargs[self.ALLOWED_FILTER_PARAMS[field]] = value
         return qs.filter(**filter_kwargs).distinct()
 

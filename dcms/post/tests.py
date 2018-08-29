@@ -103,6 +103,10 @@ class PostTestCase(TestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0].get('id'), 1)
 
+        # accepts pagination params
+        response = client.get(self.list_url + '?limit=5&offset=1')
+        self.assertEqual(response.status_code, 200)
+
     def test_post_create(self):
         client = APIClient()
 
