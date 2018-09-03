@@ -1,0 +1,3 @@
+[submodule "dcms-frontend"]
+	path = dcms-frontend
+	url = https://github.com/yifei-fu/dcms-frontend
