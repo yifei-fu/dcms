@@ -79,3 +79,13 @@ class ContentMetadataTestCase(TestCase):
         self.assertEqual(data['category'], 'root1-node2-node1')
         self.assertEqual(data['tags'][0], {'id': 2, 'name': 'tag2', 'count': 2})
         self.assertEqual(data['tags'][1], {'id': 4, 'name': 'new_tag', 'count': 1})
+
+    def test_api_query(self):
+        new_tag = Tag.objects.create(name='new-tag')
+        Post.objects.create(title='Post with another tag', published=True).tags.set([new_tag])
+        client = APIClient()
+        response = client.get(reverse('post-list') + '?tag=tag2')
+        self.assertEqual(response.status_code, 200)
+        data = get_results(response.data)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0].get('id'), 1)

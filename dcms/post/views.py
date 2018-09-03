@@ -17,7 +17,8 @@ class PostViewSet(viewsets.ModelViewSet):
 
     ALLOWED_FILTER_PARAMS = {
         'category': 'category__name',
-        'tags': 'tags__in',
+        'tag_id': 'tags__in',
+        'tag': 'tags__name',
         'creation_time_lte': 'creation_time__lte',
         'creation_time_gte': 'creation_time__gte',
         'modification_time_lte': 'modification_time__lte',
